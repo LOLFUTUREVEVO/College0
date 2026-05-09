@@ -5,6 +5,8 @@ import Link from 'next/link';
 export default function Registrar() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const currentPeriod = localStorage.getItem('lastPeriod') || "No Active Period";
+
   const sampleStudentApps = [
     { 
         name: "Karol Kopciuch",
@@ -73,7 +75,7 @@ export default function Registrar() {
                 Applications
             </Link>
             <Link 
-                href="" 
+                href="/registrar/semester" 
                 className="p-3 rounded-md transition-colors" 
             >
                 Semester Management
@@ -105,12 +107,12 @@ export default function Registrar() {
             <div className="text-right">
             <div className="text-xl font-mono text-blue-400">10:45 AM</div>
             <div className="text-sm text-gray-500 uppercase tracking-wider">
-                 Grading-Period
+                 {currentPeriod}
             </div>
             </div>
         </div>
 
-        {/* CLASSES GRID */}
+        {/* APPLICATIONS GRID */}
         <h2 className="text-2xl font-bold mt-5 mb-2">Student Applications</h2>
         <div className="border-b-2 border-gray-700 mb-2"></div>
         <div className="grid grid-cols-1 gap-4 overflow-y-scroll bg-slate-700 p-5 rounded-lg max-h-1/3">

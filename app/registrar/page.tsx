@@ -7,6 +7,7 @@ export default function Registrar() {
 
   const currentPeriod = localStorage.getItem('lastPeriod') || "No Active Period";
 
+  // from database
   const sampleStudentApps = [
     { 
         name: "Karol Kopciuch",
@@ -39,6 +40,8 @@ export default function Registrar() {
         target_major: "Mechanical Engineering"
     }
   ];
+
+  // from database
   const sampleInstructorApps = [
     {
         name: "Frank Hill",

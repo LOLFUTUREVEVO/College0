@@ -1,11 +1,18 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function SemesterManagement() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const [period, setPeriod] = useState(localStorage.getItem('lastPeriod') || "Select Semester Period");
+  const [period, setPeriod] = useState("Select Semester Period");
+
+  useEffect(() => {
+    const saved = localStorage.getItem('lastPeriod');
+        if (saved) {
+            setPeriod(saved);
+        }
+  });
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.value;
@@ -13,43 +20,33 @@ export default function SemesterManagement() {
     localStorage.setItem('lastPeriod', newValue);
   };
 
-  const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const TIMES = ["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM"];
+  const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+  const TIMES = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM"];
 
-  // Sample data for the prototype
-  const SCHEDULE = [
-    { day: "Mon", task: "Class Setup", time: "09:00 AM", type: "setup" },
-    { day: "Wed", task: "Registration Sync", time: "02:00 PM", type: "admin" },
-    { day: "Fri", task: "Faculty Meeting", time: "11:00 AM", type: "meeting" },
-  ];
-
+  // from database
   const sampleclasses = [
-    { name :'Advanced Mathematics',
+    { name :'Advanced Chemistry',
       room :'302',
       days : 'Mon/Wed/Fri',
-      students : 25,
-      average : 'B+'
+      time : '10:00 AM',
+      instructor : 'Karen Smith',
+      size : 20,
     },
     {
-      name :'Intro To Computer Science',
-      room :'104',
-      days : 'Mon/Wed/Fri',
-      students : 50, 
-      average : 'A'
+      name :'Intro To Economics',
+      room :'None (Remote)',
+      days : 'Mon/Wed',
+      time : '2:00 PM',
+      instructor : 'Katherine Johnson',
+      size : 35,
     },
     {
-      name :'Digital Marketing',
-      room :'206',
-      days : 'Tue/Thur',
-      students : 28,
-      average : 'B'
-    },
-    {
-      name :'Artificial Intelligence Lab',
+      name :'Thermodynamics Lab',
       room :'101',
-      days : 'Tue/Thur',
-      students : 19,
-      average : 'C-'
+      days : 'Tue/Thu',
+      time : '12:00 PM',
+      instructor : 'Albert Einstein',
+      size : 50,
     }
   ];
 
@@ -119,49 +116,59 @@ export default function SemesterManagement() {
         <h2 className="text-2xl font-bold mt-7 mb-2">{period}</h2>
         <div className="border-b-2 border-gray-700 mb-2"></div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
-            {/* HEADER ROW */}
-            <div className="grid grid-cols-[80px_1fr] bg-gray-900 border-b border-gray-800">
-                <div className="border-r border-gray-800"></div> 
+        <div className="flex flex-col lg:flex-row gap-3 items-start mx-auto max-w-7xl">
+            {/* CALENDAR */}
+            <div className="flex-1 border border-gray-800 rounded-xl overflow-hidden">
+                <div className="grid grid-cols-[80px_1fr] bg-gray-900 border-b border-gray-800">
+                    <div className="border-r border-gray-800"></div> 
         
-                <div className="grid grid-cols-7">
-                {DAYS.map((day) => (
-                    <div key={day} className="py-4 text-center border-r border-gray-800 last:border-r-0">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-tighter">{day}</span>
+                    <div className="grid grid-cols-5">
+                    {DAYS.map((day) => (
+                        <div key={day} className="py-4 text-center border-r border-gray-800 last:border-r-0">
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-tighter">{day}</span>
+                        </div>
+                    ))}
                     </div>
-                ))}
+                </div>
+
+                <div className="overflow-y-auto">
+                    {TIMES.map((time) => (
+                    <div key={time} className="grid grid-cols-[80px_1fr] border-b border-gray-800 last:border-b-0">
+            
+                        <div className="flex items-center justify-center border-r border-gray-800 bg-gray-900/50">
+                          <span className="text-[10px] font-mono text-blue-400 font-medium">{time}</span>
+                        </div>
+
+                        <div className="grid grid-cols-5 h-20">
+                          {DAYS.map((day) => (
+                            <div key={`${day}-${time}`} className="border-r border-gray-800 last:border-r-0 p-1 hover:bg-white/5 transition-colors group relative">
+                                {sampleclasses.map((course) => {
+                                    if (course.days.includes(day) && course.time === time) {
+                                        return (
+                                            <div key={course.name} className="absolute inset-1 bg-blue-500/20 border-l-2 border-blue-500 rounded p-1.5 z-10">
+                                                <p className="text-[10.5px] font-bold text-blue-300 uppercase truncate w-full leading-none">{course.name}</p>
+                                                <p className="text-[9.5px] text-blue-200/70 mt-0.5">{course.instructor}</p>
+                                                <p className="text-[9.5px] text-blue-200/70 mt-0.5">Room: {course.room}</p>
+                                                <p className="text-[9.5px] text-blue-200/70 mt-0.5">Size: {course.size}</p>
+                                            </div>
+                                        );
+                                    }
+                                })}
+                                <div className="opacity-0 group-hover:opacity-100 flex items-center justify-center h-full text-gray-700 text-lg pointer-events-none">
+                                    +
+                                </div>
+                            </div>
+                          ))}
+                        </div>
+
+                    </div>
+                    ))}
                 </div>
             </div>
 
-            {/* CALENDAR BODY */}
-            <div className="overflow-y-auto">
-                {TIMES.map((time) => (
-                <div key={time} className="grid grid-cols-[80px_1fr] border-b border-gray-800 last:border-b-0">
-            
-                    <div className="flex items-center justify-center border-r border-gray-800 bg-gray-900/50">
-                      <span className="text-[10px] font-mono text-blue-400 font-medium">{time}</span>
-                    </div>
-
-                    <div className="grid grid-cols-7 h-20">
-                      {DAYS.map((day) => (
-                        <div key={`${day}-${time}`} className="border-r border-gray-800 last:border-r-0 p-1 hover:bg-white/5 transition-colors group relative">
-                            {/* test data */}
-                            {day === "Mon" && time === "10:00 AM" && (
-                            <div className="absolute inset-1 bg-blue-500/20 border-l-2 border-blue-500 rounded p-1.5 z-10">
-                                <p className="text-[9px] font-bold text-blue-300 uppercase leading-none">Class Setup</p>
-                                <p className="text-[8px] text-blue-200/70 mt-0.5">Room 402</p>
-                            </div>
-                            )}
-
-                            <div className="opacity-0 group-hover:opacity-100 flex items-center justify-center h-full text-gray-700 text-lg pointer-events-none">
-                                +
-                            </div>
-                        </div>
-                      ))}
-                    </div>
-
-                </div>
-                ))}
+            {/* ADD CLASS */}
+            <div className="flex gap-4 bg-slate-700 p-5 rounded-lg w-full lg:w-[300px]">
+                <p>Click a cell to add/change a class</p>
             </div>
         </div>
 

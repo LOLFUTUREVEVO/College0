@@ -28,8 +28,8 @@ public class EnrollmentController {
     }
 
     // Student enrolls in a course
-    @PostMapping
-    public ResponseEntity<?> enroll(HttpServletRequest request, @RequestBody Enrollment enrollment) {
+    @PostMapping("/enroll/{courseId}")
+    public ResponseEntity<?> enroll(HttpServletRequest request, @RequestBody Enrollment enrollment, @PathVariable Integer courseId) {
         try {
             if (!isStudentOrRegistrar(request)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied.");

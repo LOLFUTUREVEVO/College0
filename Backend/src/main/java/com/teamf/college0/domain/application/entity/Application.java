@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "application")
+@Table(name = "applications")
 public class Application {
 
     public enum ApplicationType {

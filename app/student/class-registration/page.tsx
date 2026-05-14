@@ -1,13 +1,37 @@
 'use client'
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getCoursesStudents } from '@/app/services/courseService';
+import { logoutUser } from '@/app/services/authService';
+import { useRouter } from 'next/navigation';
 
 export default function SemesterManagement() {
+  const router = useRouter();
   const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
   const TIMES = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM"];
 
   const [selectedClass, setSelectedClass] = useState<any | null>(null);
+  const [obtainedClasses, setObtainedClasses] = useState<any | null>(null);
+    useEffect(() =>{
+            const fetchData = async () =>{
+                try{
+                    const pend = await getCoursesStudents();
+                    setObtainedClasses(pend);
+                    console.log(pend);
+                } catch (error) {
+                    console.error("Failed to fetch accs: ", error);
+                }
+            } 
+            fetchData();
+        }, []);
 
+
+
+
+    const handleLogout = () => {
+          logoutUser();
+          router.push("/login");
+        };
   // from database
   const sampleclasses = [
     { name : 'Advanced Chemistry',
@@ -70,7 +94,8 @@ export default function SemesterManagement() {
         </nav>
         
         <div className="mt-auto">
-          <button className="w-full text-left p-3 rounded-md hover:bg-red-500 transition-colors">
+          <button onClick={handleLogout}
+            className="w-full text-left p-3 rounded-md hover:bg-red-500 transition-colors">
             Logout
           </button>
         </div>
@@ -120,7 +145,9 @@ export default function SemesterManagement() {
                           {DAYS.map((day) => (
                             <div key={`${day}-${time}`}
                             className="border-r border-gray-800 last:border-r-0 p-1 transition-colors group relative">
-                                {sampleclasses.filter((course) => course.days.includes(day) && course.time === time).map((course) => (
+                                {
+                                
+                                sampleclasses.filter((course) => course.days.includes(day) && course.time === time).map((course) => (
                                     <div key={course.name} onClick={() => setSelectedClass(course)} 
                                     className="absolute inset-1 bg-blue-500/20 border-l-2 border-blue-500 rounded p-1.5 z-10 cursor-pointer hover:bg-blue-500/30 transition-colors">
                                         <p className="text-[10.5px] font-bold text-blue-300 uppercase truncate w-full leading-none">{course.name}</p>
@@ -130,7 +157,9 @@ export default function SemesterManagement() {
                                         <p className="text-[9.5px] text-blue-200/70 mt-0.5">Seats: {course.seats}</p>
                                         <p className="text-[9.5px] text-blue-200/70 mt-0.5">Waitlisted: {course.waitlisted}</p>
                                         </div>
-                                ))}
+                                )) 
+                            
+                                }
                             </div>
                             ))}
                         </div>

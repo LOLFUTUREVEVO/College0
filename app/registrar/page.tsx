@@ -1,12 +1,19 @@
 'use client'
 import { useState } from 'react';
 import Link from 'next/link';
+import { logoutUser } from '../services/authService';
+import { useRouter } from 'next/navigation';
 
 export default function Registrar() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const router = useRouter();
   const currentPeriod = localStorage.getItem('lastPeriod') || "No Active Period";
 
+
+  const handleLogout = () => {
+    logoutUser();
+    router.push("/");
+  }
   // from database
   const sampleStudentApps = [
     { 
@@ -92,7 +99,7 @@ export default function Registrar() {
         </nav>
         
         <div className="mt-auto">
-          <button className="w-full text-left p-3 rounded-md hover:bg-red-500 transition-colors">
+          <button className="w-full text-left p-3 rounded-md hover:bg-red-500 transition-colors" onClick={handleLogout}>
             Logout
           </button>
         </div>

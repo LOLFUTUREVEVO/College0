@@ -87,45 +87,15 @@ export interface LoginResponse {
 }
 
 export interface UserRegistrationData {
-  // Account info
   username: string;
   password: string;
   email: string;
 
-  // Personal info
   first_name: string;
   last_name: string;
   phone_number?: string;
   address?: string;
-  role: string; // This is needed for UserAccount
-
-  // Academic info
-  grade?: number;
-  school?: number;
-  otherSchoolName?: string;
-
-  // Center info
-  center_id?: number;
-
-  // Team info - keep as numbers for registration, backend will convert to team entities
-  frc_number?: number;
-  ftc_number?: number;
-  fll_number?: number;
-
-  // Demographics - these should match your backend enums
-  race?: string; // This will be converted to Race enum on backend
-  gender?: string;
-  membershipType: string; // This will be converted to MembershipTypes enum
-
-  // Status flags
-  isAlumni: boolean;
-  recieveEmails: boolean;
-  isWaiverSigned: boolean;
-
-  // Additional
-  photoUrl?: string;
-  membershipExpiry?: string; // ISO date string
-  creationDate?: string; // ISO date string
+  role: string; 
   dob?: string;
 }
 
@@ -135,10 +105,8 @@ export interface UserAccount {
   email: string;
   role: string;
   isActive: boolean;
-  status: 'PENDING' | 'APPROVED' | 'DENIED';
+  status: 'PENDING_APPLICATION' | 'APPROVED' | 'REJECTED' | 'DISMISSED';
   profile?: any;
-  createdAt: string;
-  updatedAt?: string;
 }
 
 export interface MemberProfile {
@@ -147,21 +115,8 @@ export interface MemberProfile {
   email: string;
   phone_number?: string;
   address?: string;
-  grade?: number;
   school?: any;
-  otherSchoolName?: string;
-  center_id?: any;
-  frc_number?: number;
-  ftc_number?: number;
-  fll_number?: number;
-  race?: string;
-  membershipType?: string;
   dob?: string;
-  isAlumni?: boolean;
-  recieveEmails?: boolean;
-  isWaiverSigned?: boolean;
-  membershipExpiry?: string;
-  creationDate?: string;
 }
 
 export const loginUser = async (credentials: LoginCredentials): Promise<LoginResponse> => {
@@ -180,7 +135,7 @@ export const loginUser = async (credentials: LoginCredentials): Promise<LoginRes
     console.log('User account from token:', userAccount);
     
     // Block login for pending or inactive accounts
-    if (userAccount?.status === 'PENDING') {
+    if (userAccount?.status === 'PENDING_APPLICATION') {
       throw new Error('Your account is pending approval. Please wait for an administrator to approve your registration.');
     }
     
@@ -188,7 +143,7 @@ export const loginUser = async (credentials: LoginCredentials): Promise<LoginRes
       throw new Error('Your account has been deactivated. Please contact an administrator.');
     }
     
-    if (userAccount?.status === 'DENIED') {
+    if (userAccount?.status === 'REJECTED') {
       throw new Error('Your account registration was denied. Please contact an administrator for more information.');
     }
     
@@ -216,34 +171,15 @@ export const loginUser = async (credentials: LoginCredentials): Promise<LoginRes
 
 export const registerUser = async (userData: UserRegistrationData): Promise<any> => {
   try {
-    // Transform data to exactly match MembersDTO structure ts gonna make me wanna die
     const registrationPayload = {
-      // Required UserAccount fields
       username: userData.username,
       password: userData.password,
-      role: "USER", // Changed back to USER since that's what worked before
-      
-      // Member profile fields - match MembersDTO exactly
-      center_id: userData.center_id || null,
-      school: userData.school || null,
-      grade: userData.grade || null,
-      frc_number: userData.frc_number || null,
-      ftc_number: userData.ftc_number || null,
-      fll_number: userData.fll_number || null,
+      role: "USER", 
       first_name: userData.first_name,
       last_name: userData.last_name,
-      phone_number: userData.phone_number ? String(userData.phone_number) : null, // Ensure string
+      phone_number: userData.phone_number ? String(userData.phone_number) : null,
       address: userData.address || null,
       email: userData.email,
-      race: userData.race || null,
-      membershipType: userData.membershipType,
-      otherSchoolName: userData.otherSchoolName || null,
-      isAlumni: userData.isAlumni,
-      recieveEmails: userData.recieveEmails,
-      isWaiverSigned: userData.isWaiverSigned,
-      photoUrl: userData.photoUrl || null,
-      membershipExpiry: userData.membershipExpiry || null,
-      creationDate: userData.creationDate || new Date().toISOString(),
     };
 
     // Remove undefined values but keep null values
@@ -295,6 +231,7 @@ export const logoutUser = (): void => {
 export const getCurrentUser = async (): Promise<any> => {
   try {
     const token = getToken();
+    console.log("What: ", token);
     console.log("Making request to /auth/me with token:", !!token);
     
     const response = await axios.get(`${API_URL}/auth/me`, {
@@ -381,7 +318,6 @@ const getUserAccountFromToken = (token: string): UserAccount | null => {
       role: decodedPayload.role,
       isActive: decodedPayload.isActive !== false,
       status: decodedPayload.status || 'APPROVED',
-      createdAt: decodedPayload.iat ? new Date(decodedPayload.iat * 1000).toISOString() : new Date().toISOString()
     };
   } catch (error) {
     console.error('Error decoding JWT:', error);

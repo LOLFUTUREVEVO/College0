@@ -50,8 +50,7 @@ public class SecurityConfigs {
         configuration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:3000",
                 "http://127.0.0.1:3000",
-                "http://localhost:3001",
-                "https://dashboard.nycfirst.org"
+                "http://localhost:3001"
         ));
 
         configuration.setAllowedMethods(Arrays.asList(
@@ -80,6 +79,7 @@ public class SecurityConfigs {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/auth/me").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

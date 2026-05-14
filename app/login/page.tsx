@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, {useState} from 'react';
 import {useRouter} from 'next/navigation';
-import {loginUser} from '@/app/services/authService'
+import {loginUser, getCurrentUser} from '@/app/services/authService'
 
 
 export default function Login() {
@@ -33,34 +33,30 @@ export default function Login() {
       const result = await loginUser(creds);
       console.log('Login successful:', result);
       
-      // Small delay to ensure token is properly set
       await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Route based on role - only USER or ADMIN -> it fucking shouldn't be though
-      if (result.role === 'ADMIN') {
+
+      if (result.role === 'REGISTRAR') {
         console.log('Redirecting admin to admin dashboard');
-        router.push('/dashboard/admin');
-      } else if (result.role === 'USER') {
+        router.push('/registrar');
+      } else if (result.role === 'INSTRUCTOR') {
         console.log('Redirecting user to member dashboard');
-        router.push('/dashboard/user');
-      } else if( result.role === 'EMPLOYEE') {
+        router.push('/instructor');
+      } else if( result.role === 'STUDENT') {
         console.log('Redirecting user to member dashboard');
-        router.push('/dashboard/admin');
+        router.push('/student');
       } else {
         console.log('Unknown role, defaulting to dashboard');
-        router.push('/dashboard/user');
+        router.push('/visitors');
       }
     } catch (error: any) {
       console.error('Login failed:', error);
       
       // Better error handling for account status
       if (error.message && error.message.includes('pending')) {
-        setError('Your account is pending approval. Please wait for admin approval.');
-      } else if (error.message && error.message.includes('denied')) {
+        setError('Your application is pending approval.');
+      } else if (error.message && error.message.includes('rejected')) {
         setError('Your account registration was denied. Please contact an administrator.');
-      } else if (error.message && error.message.includes('deactivated')) {
-        setError('Your account has been deactivated. Please contact an administrator.');
-      } else if (error.response) {
+      }  else if (error.response) {
         const errorMessage = error.response.data?.message || 
                            error.response.data || 
                            `Login failed (${error.response.status})`;

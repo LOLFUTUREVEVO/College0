@@ -22,10 +22,21 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) {
         System.out.println("Starting Data Seeding!");
-        seedRegistrar("registrar1", "Karol", "Kopciuch");
-        seedRegistrar("registrar2", "Marcus", "Coppa");
-        seedRegistrar("registrar3", "Momoka", "Yonashiro");
-        System.out.println("Completed Registrar Seeding!");
+        try {
+            seedRegistrar("registrar1", "Karol", "Kopciuch");
+            seedRegistrar("registrar2", "Marcus", "Coppa");
+            seedRegistrar("registrar3", "Momoka", "Yonashiro");
+        } catch(Exception e) {
+            System.out.println("NOT REPEATING REGISTRARS!");
+        }
+        try {
+            seedStudent("helloworld", "tyler", "bash");
+            seedStudent("flame", "chris", "kyle");
+        } catch(Exception e) {
+            System.out.println("NOT REPEATING STUDENTS");
+        }
+
+        System.out.println("Completed Data Seeding!");
     }
 
     // Should only ever seed registrar accounts, but not if they already exist!
@@ -40,5 +51,18 @@ public class DataSeeder implements CommandLineRunner {
         registrar.setStatus(UserAccount.Status.APPROVED);
 
         accountRepository.save(registrar);
+    }
+
+    private void seedStudent(String userName, String firstName, String lastName) {
+        UserAccount student = new UserAccount();
+        student.setUserName(userName);
+        student.setPassword("testpass");
+        student.setRole(UserAccount.Role.STUDENT);
+        student.setFirstName(firstName);
+        student.setLastName(lastName);
+        student.setMember(false);
+        student.setStatus(UserAccount.Status.PENDING_APPLICATION);
+
+        accountRepository.save(student);
     }
 }

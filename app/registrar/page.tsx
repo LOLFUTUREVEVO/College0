@@ -42,7 +42,8 @@ export default function RegistrarHome() {
           <Link href="/registrar" className="p-3 rounded-md bg-slate-700 transition-colors">Dashboard</Link>
           <Link href="/registrar/applications" className="p-3 rounded-md transition-colors">Applications</Link>
           <Link href="/registrar/semester" className="p-3 rounded-md transition-colors">Semester Management</Link>
-          <Link href="/student/help" className="p-3 rounded-md transition-colors">Help Page</Link>
+          <Link href="/registrar/complaints" className="p-3 rounded-md transition-colors">Complaints</Link>
+          <Link href="/registrar/graduation" className="p-3 rounded-md transition-colors">Graduation Requests</Link>
         </nav>
         <div className="mt-auto">
           <button onClick={handleLogout} className="w-full text-left p-3 rounded-md hover:bg-red-500 transition-colors">

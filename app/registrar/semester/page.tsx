@@ -315,7 +315,8 @@ export default function SemesterManagement() {
           <Link href="/registrar" className="p-3 rounded-md transition-colors">Dashboard</Link>
           <Link href="/registrar" className="p-3 rounded-md transition-colors">Applications</Link>
           <Link href="/registrar/semester" className="p-3 rounded-md bg-slate-700 transition-colors">Semester Management</Link>
-          <Link href="/student/help" className="p-3 rounded-md transition-colors">Help Page</Link>
+          <Link href="/registrar/complaints" className="p-3 rounded-md transition-colors">Complaints</Link>
+          <Link href="/student/help" className="p-3 rounded-md transition-colors">Graduation Requests</Link>
         </nav>
 
         <div className="mt-auto">

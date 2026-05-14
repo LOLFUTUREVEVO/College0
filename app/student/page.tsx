@@ -27,7 +27,13 @@ export default function Student() {
                 href="/student/help" 
                 className="p-3 rounded-md transition-colors" 
             >
-                Help Page
+                Complaints/Reviews
+            </Link>
+            <Link 
+                href="/student/help" 
+                className="p-3 rounded-md transition-colors" 
+            >
+                Apply for Graduation
             </Link>
         </nav>
         

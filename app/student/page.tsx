@@ -3,8 +3,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 export default function Student() {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <div className="flex font-sans bg-gray-900 w-full h-screen text-white">
       
@@ -14,7 +12,7 @@ export default function Student() {
         
         <nav className="flex flex-col space-y-2">
             <Link 
-                href="/visitors" 
+                href="/student" 
                 className="p-3 rounded-md bg-slate-700 transition-colors" 
             >
                 Main Page
@@ -62,7 +60,7 @@ export default function Student() {
             {['Advanced Mathematics', 'Computer Science 101', 'Digital Marketing', 'Ethics in AI'].map((course) => (
             <div key={course} className="p-6 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 transition-colors">
                 <h3 className="text-lg font-semibold mb-1">{course}</h3>
-                <p className="text-sm text-gray-400">Room 302 • Mon/Wed/Fri</p>
+                <p className="text-sm text-gray-400">Professor Jie Wei • Room 302 • Mon/Wed/Fri</p>
             </div>
             ))}
         </div>

@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { logoutUser } from '../services/authService';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,9 @@ export default function Registrar() {
   const router = useRouter();
   const currentPeriod = localStorage.getItem('lastPeriod') || "No Active Period";
 
+    useEffect(()=> {
+        
+    });
 
   const handleLogout = () => {
     logoutUser();

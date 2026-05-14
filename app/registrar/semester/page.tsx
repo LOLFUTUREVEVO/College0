@@ -17,8 +17,6 @@ export default function SemesterManagement() {
     seats: 0
   });
   
-  const [isOpen, setIsOpen] = useState(false);
-
   useEffect(() => {
     const saved = localStorage.getItem('lastPeriod');
         if (saved) {
@@ -45,13 +43,13 @@ export default function SemesterManagement() {
       days : 'Mon/Wed/Fri',
       time : '10:00 AM',
       instructor : 'Karen Smith',
-      enrolled : 12,
+      enrolled : 20,
       seats : 20,
       waitlisted : 5,
     },
     {
       name :'Intro To Economics',
-      room :'None (Remote)',
+      room :'511',
       days : 'Mon/Wed',
       time : '2:00 PM',
       instructor : 'Katherine Johnson',
@@ -67,7 +65,7 @@ export default function SemesterManagement() {
       instructor : 'Albert Einstein',
       enrolled : 18,
       seats : 50,
-      waitlisted : 2,
+      waitlisted : 0,
     }
   ];
 
@@ -113,7 +111,7 @@ export default function SemesterManagement() {
       </div>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 p-10 "> 
+      <main className="flex-1 p-10"> 
         <div className="flex justify-between items-start w-full">
             <div>
             <h1 className="text-3xl font-bold">Semester Management</h1>
@@ -133,7 +131,6 @@ export default function SemesterManagement() {
             </div>
         </div>
 
-        {/* CLASSES GRID */}
         <h2 className="text-2xl font-bold mt-7 mb-2">{period}</h2>
         <div className="border-b-2 border-gray-700 mb-2"></div>
 
@@ -148,6 +145,7 @@ export default function SemesterManagement() {
             )}
             <div className="flex flex-col lg:flex-row gap-3 items-start mx-auto max-w-7xl">
                 <div className="flex-1 border border-gray-800 rounded-xl overflow-hidden">
+                    {/* CALENDAR */}
                     <div className="grid grid-cols-[80px_1fr] bg-gray-900 border-b border-gray-800">
                         <div className="border-r border-gray-800"></div> 
             
@@ -187,7 +185,7 @@ export default function SemesterManagement() {
                                                 <div key={course.name} className="absolute inset-1 bg-blue-500/20 border-l-2 border-blue-500 rounded p-1.5 z-10 pointer-events-none">
                                                     <p className="text-[10.5px] font-bold text-blue-300 uppercase truncate w-full leading-none">{course.name}</p>
                                                     <p className="text-[9.5px] text-blue-200/70 mt-0.5">{course.instructor}</p>
-                                                    <p className="text-[9.5px] text-blue-200/70 mt-0.5">Room: {course.room}</p>
+                                                    <p className="text-[9.5px] text-blue-200/70 mt-0.5">Room {course.room}</p>
                                                     {(period === "Course Registration Period" || period === "Class Running Period") && (
                                                       <p className="text-[9.5px] text-blue-200/70 mt-0.5">Enrolled: {course.enrolled}</p>
                                                     )}

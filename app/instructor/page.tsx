@@ -111,44 +111,6 @@ export default function Instructor() {
         </div>
 
       </main>
-      
-
-
-      {/* CHAT INTERFACE */}
-      <div className="fixed bottom-6 right-6 flex flex-col items-end">
-        {isOpen && (
-          <div className="w-80 h-96 bg-blue-950 rounded-lg shadow-2xl mb-4 flex flex-col overflow-hidden border border-gray-600">
-            {/* Chat Header */}
-            <div className="bg-blue-950 p-4 text-white font-bold flex justify-between items-center">
-              <span>AI Assistant</span>
-              <button onClick={() => setIsOpen(false)} className="hover:text-gray-200">✕</button>
-            </div>
-            
-            <div className="flex-1 p-4 text-gray-800 overflow-y-auto bg-blue-900 text-sm">
-              <p className="bg-blue-100 p-2 rounded-lg mb-2 self-start">
-                Hello! How can I help you today?
-              </p>
-            </div>
-
-            <div className="p-3 border-t">
-              <input 
-                type="text" 
-                placeholder="Type a message..." 
-                className="w-full p-2 border rounded-md text-white focus:outline-blue-400"
-              />
-            </div>
-          </div>
-        )}
-
-
-        <button onClick={() => setIsOpen(!isOpen)} className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-full shadow-lg transition-transform active:scale-95">
-          {isOpen ? (
-            <span className="font-bold">Close Chat</span>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
-          )}
-        </button>
-      </div>
     </div>
   );
 }

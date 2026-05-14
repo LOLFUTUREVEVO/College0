@@ -14,7 +14,7 @@ export default function SemesterManagement() {
     days: '',
     time: '',
     instructor: '',
-    size: 0
+    seats: 0
   });
   
   const [isOpen, setIsOpen] = useState(false);
@@ -45,7 +45,9 @@ export default function SemesterManagement() {
       days : 'Mon/Wed/Fri',
       time : '10:00 AM',
       instructor : 'Karen Smith',
-      size : 20,
+      enrolled : 12,
+      seats : 20,
+      waitlisted : 5,
     },
     {
       name :'Intro To Economics',
@@ -53,7 +55,9 @@ export default function SemesterManagement() {
       days : 'Mon/Wed',
       time : '2:00 PM',
       instructor : 'Katherine Johnson',
-      size : 35,
+      enrolled : 30,
+      seats : 35,
+      waitlisted : 0,
     },
     {
       name :'Thermodynamics Lab',
@@ -61,7 +65,9 @@ export default function SemesterManagement() {
       days : 'Tue/Thu',
       time : '12:00 PM',
       instructor : 'Albert Einstein',
-      size : 50,
+      enrolled : 18,
+      seats : 50,
+      waitlisted : 2,
     }
   ];
 
@@ -117,7 +123,7 @@ export default function SemesterManagement() {
             {/* TIME & SEMESTER STATUS */}
             <div className="text-right mt-3">
             <div className="text-xl font-mono text-blue-400">10:45 AM</div>
-            <select value={period} onChange={handlePeriodChange} className="bg-gray-900 rounded-lg text-sm text-gray-500 uppercase text-right">
+            <select value={period} onChange={handlePeriodChange} className="bg-gray-900 rounded-lg text-sm text-gray-500 uppercase text-right cursor-pointer">
                 <option>Set Semester Period</option>
                 <option>Class Set-Up Period</option>
                 <option>Course Registration Period</option>
@@ -131,110 +137,149 @@ export default function SemesterManagement() {
         <h2 className="text-2xl font-bold mt-7 mb-2">{period}</h2>
         <div className="border-b-2 border-gray-700 mb-2"></div>
 
-        <div className="flex flex-col lg:flex-row gap-3 items-start mx-auto max-w-7xl">
-            {/* CALENDAR */}
-            <div className="flex-1 border border-gray-800 rounded-xl overflow-hidden">
-                <div className="grid grid-cols-[80px_1fr] bg-gray-900 border-b border-gray-800">
-                    <div className="border-r border-gray-800"></div> 
-        
-                    <div className="grid grid-cols-5">
-                    {DAYS.map((day) => (
-                        <div key={day} className="py-4 text-center border-r border-gray-800 last:border-r-0">
-                            <span className="text-xs font-bold text-gray-400 uppercase tracking-tighter">{day}</span>
-                        </div>
-                    ))}
-                    </div>
-                </div>
-
-                <div className="overflow-y-auto">
-                    {TIMES.map((time) => (
-                    <div key={time} className="grid grid-cols-[80px_1fr] border-b border-gray-800 last:border-b-0">
+        {period !== "Grading Period" && period !== "Set Semester Period" ? (
+          <div>
+            {period === "Class Set-Up Period" ? (
+              <p className="text-gray-400 mb-5">Set up classes for the upcoming semester</p>
+            ) : period === "Course Registration Period" ? (
+              <p className="text-gray-400 mb-5">Students can now register for classes in this finalized schedule</p>
+            ) : (
+              <p className="text-gray-400 mb-5">Classes are in session and the special registration period has begun</p>
+            )}
+            <div className="flex flex-col lg:flex-row gap-3 items-start mx-auto max-w-7xl">
+                <div className="flex-1 border border-gray-800 rounded-xl overflow-hidden">
+                    <div className="grid grid-cols-[80px_1fr] bg-gray-900 border-b border-gray-800">
+                        <div className="border-r border-gray-800"></div> 
             
-                        <div className="flex items-center justify-center border-r border-gray-800 bg-gray-900/50">
-                          <span className="text-[10px] font-mono text-blue-400 font-medium">{time}</span>
-                        </div>
-
-                        <div className="grid grid-cols-5 h-20">
-                          {DAYS.map((day) => (
-                            <div key={`${day}-${time}`}
-                            onClick={() => {
-                              const existingClass = sampleclasses.find(c => c.days.includes(day) && c.time === time);
-                              setIsEditingClass(true);
-                              if (existingClass) {
-                                setClassData(existingClass);
-                              } else {
-                                setClassData({name: '', room: '', days: '', time: '', instructor: '', size: 0});
-                              }
-                            }}
-                            className="border-r border-gray-800 last:border-r-0 p-1 hover:bg-white/5 transition-colors group relative cursor-pointer">
-                                {sampleclasses.map((course) => {
-                                    if (course.days.includes(day) && course.time === time) {
-                                        return (
-                                            <div key={course.name} className="absolute inset-1 bg-blue-500/20 border-l-2 border-blue-500 rounded p-1.5 z-10 pointer-events-none">
-                                                <p className="text-[10.5px] font-bold text-blue-300 uppercase truncate w-full leading-none">{course.name}</p>
-                                                <p className="text-[9.5px] text-blue-200/70 mt-0.5">{course.instructor}</p>
-                                                <p className="text-[9.5px] text-blue-200/70 mt-0.5">Room: {course.room}</p>
-                                                <p className="text-[9.5px] text-blue-200/70 mt-0.5">Size: {course.size}</p>
-                                            </div>
-                                        );
-                                    }
-                                })}
-                                <div className="opacity-0 group-hover:opacity-100 flex items-center justify-center h-full text-gray-700 text-lg">
-                                    +
-                                </div>
+                        <div className="grid grid-cols-5">
+                        {DAYS.map((day) => (
+                            <div key={day} className="py-4 text-center border-r border-gray-800 last:border-r-0">
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-tighter">{day}</span>
                             </div>
-                          ))}
+                        ))}
                         </div>
-
                     </div>
-                    ))}
+
+                    <div className="overflow-y-auto">
+                        {TIMES.map((time) => (
+                        <div key={time} className="grid grid-cols-[80px_1fr] border-b border-gray-800 last:border-b-0">
+                
+                            <div className="flex items-center justify-center border-r border-gray-800 bg-gray-900/50">
+                              <span className="text-[10px] font-mono text-blue-400 font-medium">{time}</span>
+                            </div>
+
+                            <div className="grid grid-cols-5 h-28">
+                              {DAYS.map((day) => (
+                                <div key={`${day}-${time}`}
+                                onClick={() => {
+                                  const existingClass = sampleclasses.find(c => c.days.includes(day) && c.time === time);
+                                  setIsEditingClass(true);
+                                  if (existingClass) {
+                                    setClassData(existingClass);
+                                  } else {
+                                    setClassData({name: '', room: '', days: '', time: '', instructor: '', seats: 0});
+                                  }
+                                }}
+                                className={period === "Class Set-Up Period" ? "border-r border-gray-800 last:border-r-0 p-1 hover:bg-white/5 transition-colors group relative cursor-pointer" : "border-r border-gray-800 last:border-r-0 p-1 transition-colors group relative"}>
+                                    {sampleclasses.map((course) => {
+                                        if (course.days.includes(day) && course.time === time) {
+                                            return (
+                                                <div key={course.name} className="absolute inset-1 bg-blue-500/20 border-l-2 border-blue-500 rounded p-1.5 z-10 pointer-events-none">
+                                                    <p className="text-[10.5px] font-bold text-blue-300 uppercase truncate w-full leading-none">{course.name}</p>
+                                                    <p className="text-[9.5px] text-blue-200/70 mt-0.5">{course.instructor}</p>
+                                                    <p className="text-[9.5px] text-blue-200/70 mt-0.5">Room: {course.room}</p>
+                                                    {(period === "Course Registration Period" || period === "Class Running Period") && (
+                                                      <p className="text-[9.5px] text-blue-200/70 mt-0.5">Enrolled: {course.enrolled}</p>
+                                                    )}
+                                                    <p className="text-[9.5px] text-blue-200/70 mt-0.5">Seats: {course.seats}</p>
+                                                    {(period === "Course Registration Period") && (
+                                                      <p className="text-[9.5px] text-blue-200/70 mt-0.5">Waitlisted: {course.waitlisted}</p>
+                                                    )}
+                                                </div>
+                                            );
+                                        }
+                                    })}
+                                    {period === "Class Set-Up Period" && (
+                                    <div className="opacity-0 group-hover:opacity-100 flex items-center justify-center h-full text-gray-700 text-lg">
+                                        +
+                                    </div>
+                                    )}
+                                </div>
+                              ))}
+                            </div>
+
+                        </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
 
-            {/* ADD/CHANGE CLASS */}
-            <div className="flex gap-4 bg-slate-700 p-5 rounded-lg w-full lg:w-[300px]">
-              {!isEditingClass ? (
-                  <p className="text-lg">Click cell to add/change class</p>
-              ) : (
-                <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                  <p className="text-lg">Class Details</p>
-          
-                  <input type="text" placeholder="Class Name" value = {classData.name || ''}
-                  className="w-full bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
-                  onChange={(e) => setClassData({...classData, name: e.target.value})}/>
-          
-                  <input type="text" placeholder="Room" value = {classData.room || ''}
-                  className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
-                  onChange={(e) => setClassData({...classData, room: e.target.value})}/>
+                {/* ADD/CHANGE CLASS */}
+                {period === "Class Set-Up Period" && (
+                <div className="flex gap-4 bg-slate-700 p-5 rounded-lg w-full lg:w-[300px]">
+                  {!isEditingClass ? (
+                      <p className="text-lg">Click cell to add/change class</p>
+                  ) : (
+                    <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <p className="text-lg">Class Details</p>
+              
+                      <input type="text" placeholder="Class Name" value = {classData.name || ''}
+                      className="w-full bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                      onChange={(e) => setClassData({...classData, name: e.target.value})}/>
+              
+                      <input type="text" placeholder="Room" value = {classData.room || ''}
+                      className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                      onChange={(e) => setClassData({...classData, room: e.target.value})}/>
 
-                  <input type="text" placeholder="Days" value = {classData.days || ''}
-                  className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
-                  onChange={(e) => setClassData({...classData, days: e.target.value})}/>
+                      <input type="text" placeholder="Days" value = {classData.days || ''}
+                      className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                      onChange={(e) => setClassData({...classData, days: e.target.value})}/>
 
-                  <input type="text" placeholder="Time" value = {classData.time || ''}
-                  className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
-                  onChange={(e) => setClassData({...classData, time: e.target.value})}/>
+                      <input type="text" placeholder="Time" value = {classData.time || ''}
+                      className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                      onChange={(e) => setClassData({...classData, time: e.target.value})}/>
 
-                  <input type="text" placeholder="Instructor" value = {classData.instructor || ''}
-                  className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
-                  onChange={(e) => setClassData({...classData, instructor: e.target.value})}/>
+                      <input type="text" placeholder="Instructor" value = {classData.instructor || ''}
+                      className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                      onChange={(e) => setClassData({...classData, instructor: e.target.value})}/>
+                      
+                      <input type="number" placeholder="Seats" value = {classData.seats || ''}
+                      className="w-full bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                      onChange={(e) => setClassData({...classData, seats: Number(e.target.value)})}/>
 
-                  <input type="number" placeholder="Class Size" value = {classData.size || ''}
-                  className="w-full bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
-                  onChange={(e) => setClassData({...classData, size: Number(e.target.value)})}/>
-
-                  <div className="flex gap-2 pt-2">
-                    <button onClick={handleClassChange} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 rounded transition-colors">
-                      Add Class
-                    </button>
-                    <button onClick={() => setIsEditingClass(false)} className="text-slate-400 text-[10px] hover:text-white px-2">
-                      Cancel
-                    </button>
-                  </div>
+                      <div className="flex gap-2 pt-2">
+                        <button onClick={handleClassChange} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 rounded transition-colors">
+                          Add Class
+                        </button>
+                        <button onClick={() => setIsEditingClass(false)} className="text-slate-400 text-[10px] hover:text-white px-2">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+                )}
             </div>
-        </div>
+          </div>
+        ) : (
+          period === "Grading Period" ? (
+            <div>
+              <p className="text-gray-400 mb-5">The current status on grading for this semester's classes</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {sampleclasses.map((course) => (
+                <div key={course.name} className="p-6 bg-slate-800 border border-slate-700 rounded-xl hover:border-blue-500 transition-colors">
+                    <h3 className="text-lg font-semibold mb-1">{course.name}</h3>
+                    <p className="text-sm text-gray-400">{course.instructor}</p>
+                    <p className="text-sm text-gray-400">{course.enrolled} students enrolled</p>
+                    <p className="text-sm text-gray-400">0 students graded</p>
+                    <p className="text-sm text-gray-400">Class GPA: N/A</p>
+                </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-400">No semester period selected</p>
+          )
+        )}
 
       </main>
       

@@ -3,9 +3,21 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function SemesterManagement() {
-  const [isOpen, setIsOpen] = useState(false);
-
   const [period, setPeriod] = useState("Select Semester Period");
+
+  const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+  const TIMES = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM"];
+  const [isEditingClass, setIsEditingClass] = useState(false);
+  const [classData, setClassData] = useState({
+    name: '',
+    room: '',
+    days: '',
+    time: '',
+    instructor: '',
+    size: 0
+  });
+  
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('lastPeriod');
@@ -14,14 +26,17 @@ export default function SemesterManagement() {
         }
   });
 
-  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handlePeriodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.value;
     setPeriod(newValue);
     localStorage.setItem('lastPeriod', newValue);
   };
 
-  const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-  const TIMES = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM"];
+  const handleClassChange = () => {
+    // save to database
+    console.log("Saving class data: ", classData);
+    setIsEditingClass(false);
+  };
 
   // from database
   const sampleclasses = [
@@ -102,7 +117,7 @@ export default function SemesterManagement() {
             {/* TIME & SEMESTER STATUS */}
             <div className="text-right mt-3">
             <div className="text-xl font-mono text-blue-400">10:45 AM</div>
-            <select value={period} onChange={handleSelect} className="bg-gray-900 rounded-lg text-sm text-gray-500 uppercase text-right">
+            <select value={period} onChange={handlePeriodChange} className="bg-gray-900 rounded-lg text-sm text-gray-500 uppercase text-right">
                 <option>Set Semester Period</option>
                 <option>Class Set-Up Period</option>
                 <option>Course Registration Period</option>
@@ -141,11 +156,21 @@ export default function SemesterManagement() {
 
                         <div className="grid grid-cols-5 h-20">
                           {DAYS.map((day) => (
-                            <div key={`${day}-${time}`} className="border-r border-gray-800 last:border-r-0 p-1 hover:bg-white/5 transition-colors group relative">
+                            <div key={`${day}-${time}`}
+                            onClick={() => {
+                              const existingClass = sampleclasses.find(c => c.days.includes(day) && c.time === time);
+                              setIsEditingClass(true);
+                              if (existingClass) {
+                                setClassData(existingClass);
+                              } else {
+                                setClassData({name: '', room: '', days: '', time: '', instructor: '', size: 0});
+                              }
+                            }}
+                            className="border-r border-gray-800 last:border-r-0 p-1 hover:bg-white/5 transition-colors group relative cursor-pointer">
                                 {sampleclasses.map((course) => {
                                     if (course.days.includes(day) && course.time === time) {
                                         return (
-                                            <div key={course.name} className="absolute inset-1 bg-blue-500/20 border-l-2 border-blue-500 rounded p-1.5 z-10">
+                                            <div key={course.name} className="absolute inset-1 bg-blue-500/20 border-l-2 border-blue-500 rounded p-1.5 z-10 pointer-events-none">
                                                 <p className="text-[10.5px] font-bold text-blue-300 uppercase truncate w-full leading-none">{course.name}</p>
                                                 <p className="text-[9.5px] text-blue-200/70 mt-0.5">{course.instructor}</p>
                                                 <p className="text-[9.5px] text-blue-200/70 mt-0.5">Room: {course.room}</p>
@@ -154,7 +179,7 @@ export default function SemesterManagement() {
                                         );
                                     }
                                 })}
-                                <div className="opacity-0 group-hover:opacity-100 flex items-center justify-center h-full text-gray-700 text-lg pointer-events-none">
+                                <div className="opacity-0 group-hover:opacity-100 flex items-center justify-center h-full text-gray-700 text-lg">
                                     +
                                 </div>
                             </div>
@@ -166,9 +191,48 @@ export default function SemesterManagement() {
                 </div>
             </div>
 
-            {/* ADD CLASS */}
+            {/* ADD/CHANGE CLASS */}
             <div className="flex gap-4 bg-slate-700 p-5 rounded-lg w-full lg:w-[300px]">
-                <p>Click a cell to add/change a class</p>
+              {!isEditingClass ? (
+                  <p className="text-lg">Click cell to add/change class</p>
+              ) : (
+                <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <p className="text-lg">Class Details</p>
+          
+                  <input type="text" placeholder="Class Name" value = {classData.name || ''}
+                  className="w-full bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                  onChange={(e) => setClassData({...classData, name: e.target.value})}/>
+          
+                  <input type="text" placeholder="Room" value = {classData.room || ''}
+                  className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                  onChange={(e) => setClassData({...classData, room: e.target.value})}/>
+
+                  <input type="text" placeholder="Days" value = {classData.days || ''}
+                  className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                  onChange={(e) => setClassData({...classData, days: e.target.value})}/>
+
+                  <input type="text" placeholder="Time" value = {classData.time || ''}
+                  className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                  onChange={(e) => setClassData({...classData, time: e.target.value})}/>
+
+                  <input type="text" placeholder="Instructor" value = {classData.instructor || ''}
+                  className="bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                  onChange={(e) => setClassData({...classData, instructor: e.target.value})}/>
+
+                  <input type="number" placeholder="Class Size" value = {classData.size || ''}
+                  className="w-full bg-slate-800 border border-slate-600 p-2 rounded text-white outline-none focus:border-blue-500"
+                  onChange={(e) => setClassData({...classData, size: Number(e.target.value)})}/>
+
+                  <div className="flex gap-2 pt-2">
+                    <button onClick={handleClassChange} className="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 rounded transition-colors">
+                      Add Class
+                    </button>
+                    <button onClick={() => setIsEditingClass(false)} className="text-slate-400 text-[10px] hover:text-white px-2">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
         </div>
 

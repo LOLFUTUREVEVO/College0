@@ -1,7 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import axios from "axios";
+import { logoutUser } from '@/app/services/authService';
+import { useRouter } from 'next/navigation';
 
 interface Course {
   name: string;
@@ -213,6 +214,8 @@ export default function SemesterManagement() {
   const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
   const TIMES = HOUR_OPTIONS.map((o) => o.label);
 
+  const router = useRouter();
+
   useEffect(() => {
     const saved = localStorage.getItem("lastPeriod");
     if (saved) setPeriod(saved);
@@ -266,6 +269,11 @@ export default function SemesterManagement() {
     }));
   };
 
+  const handleLogout = () => {
+      logoutUser();
+      router.push("/login");
+    };
+
   const handleSave = async () => {
     setSaveError(null);
 
@@ -311,7 +319,8 @@ export default function SemesterManagement() {
         </nav>
 
         <div className="mt-auto">
-          <button className="w-full text-left p-3 rounded-md hover:bg-red-500 transition-colors">
+          <button onClick={handleLogout}
+            className="w-full text-left p-3 rounded-md hover:bg-red-500 transition-colors">
             Logout
           </button>
         </div>

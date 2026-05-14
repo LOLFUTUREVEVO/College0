@@ -3,8 +3,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 export default function Visitor() {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <div className="flex font-sans bg-gray-900 w-full h-screen text-white">
       

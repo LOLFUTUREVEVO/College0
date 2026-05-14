@@ -3,8 +3,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 export default function Instructor() {
-  const [isOpen, setIsOpen] = useState(false);
-
   // from database
   const sampleclasses = [
     { name :'Advanced Mathematics',

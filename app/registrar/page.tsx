@@ -3,8 +3,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 export default function Registrar() {
-  const [isOpen, setIsOpen] = useState(false);
-
   const currentPeriod = localStorage.getItem('lastPeriod') || "No Active Period";
 
   // from database
@@ -99,7 +97,7 @@ export default function Registrar() {
       </div>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 p-10 "> 
+      <main className="flex-1 p-10"> 
         <div className="flex justify-between items-end mb-8">
             <div>
             <h1 className="text-3xl font-bold">Application Management</h1>
@@ -126,8 +124,8 @@ export default function Registrar() {
                         <p className="w-full">{student.target_major}</p>
                         <p className="w-full">{student.gpa}</p>
                         <span className="flex flex-row gap-2">
-                            <button className="bg-blue-950 border border-green-600 text-green-600 p-2 rounded-md hover:bg-green-950 hover:shadow-sm hover:shadow-green-700 transition-all duration-150">Admit</button>
-                            <button className="bg-blue-950 border border-red-600 text-red-600 p-2 rounded-md hover:bg-red-950 hover:shadow-sm hover:shadow-red-700 transition-all duration-150">Reject</button>
+                            <button className="bg-blue-950 border border-green-600 text-green-600 p-2 rounded-md hover:bg-green-950 hover:shadow-sm hover:shadow-green-700 transition-all duration-150 cursor-pointer">Admit</button>
+                            <button className="bg-blue-950 border border-red-600 text-red-600 p-2 rounded-md hover:bg-red-950 hover:shadow-sm hover:shadow-red-700 transition-all duration-150 cursor-pointer">Reject</button>
                         </span>
                     </div>
                 );
@@ -143,8 +141,8 @@ export default function Registrar() {
                         <p className="w-full">{instructor.expertise}</p>
                         <p className="w-full">{instructor.degree}</p>
                         <span className="flex flex-row gap-2">
-                            <button className="bg-blue-950 border border-green-600 text-green-600 p-2 rounded-md hover:bg-green-950 hover:shadow-sm hover:shadow-green-700 transition-all duration-150">Admit</button>
-                            <button className="bg-blue-950 border border-red-600 text-red-600 p-2 rounded-md hover:bg-red-950 hover:shadow-sm hover:shadow-red-700 transition-all duration-150">Reject</button>
+                            <button className="bg-blue-950 border border-green-600 text-green-600 p-2 rounded-md hover:bg-green-950 hover:shadow-sm hover:shadow-green-700 transition-all duration-150 cursor-pointer">Admit</button>
+                            <button className="bg-blue-950 border border-red-600 text-red-600 p-2 rounded-md hover:bg-red-950 hover:shadow-sm hover:shadow-red-700 transition-all duration-150 cursor-pointer">Reject</button>
                         </span>
                     </div>
                 );

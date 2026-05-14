@@ -85,12 +85,6 @@ export default function SemesterManagement() {
             >
                 Class Registration
             </Link>
-            <Link 
-                href="/student/help" 
-                className="p-3 rounded-md transition-colors" 
-            >
-                Help Page
-            </Link>
         </nav>
         
         <div className="mt-auto">

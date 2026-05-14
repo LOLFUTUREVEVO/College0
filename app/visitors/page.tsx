@@ -53,6 +53,12 @@ export default function Visitor() {
           >
             Visitors
           </Link>
+          <Link
+            href="/login"
+            className="p-3 rounded-md bg-slate-700 hover:bg-slate-600 transition-colors text-center"
+          >
+            Back to login
+          </Link>
         </nav>
       </div>
 

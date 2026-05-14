@@ -75,6 +75,8 @@ public class CourseController {
         }
     }
 
+
+
     @DeleteMapping("/{courseId}")
     public ResponseEntity<?> removeCourse(HttpServletRequest request, @PathVariable Integer courseId) {
         try {
@@ -102,4 +104,6 @@ public class CourseController {
         Role role = jwtUtil.extractRole(token);
         return Role.REGISTRAR.equals(role);
     }
+
+
 }

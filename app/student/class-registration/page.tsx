@@ -1,13 +1,26 @@
 'use client'
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getCoursesStudents } from '@/app/services/courseService';
 
 export default function SemesterManagement() {
   const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
   const TIMES = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM"];
 
   const [selectedClass, setSelectedClass] = useState<any | null>(null);
-
+  const [obtainedClasses, setObtainedClasses] = useState<any | null>(null);
+    useEffect(() =>{
+            const fetchData = async () =>{
+                try{
+                    const pend = await getCoursesStudents();
+                    setObtainedClasses(pend);
+                    console.log(pend);
+                } catch (error) {
+                    console.error("Failed to fetch accs: ", error);
+                }
+            } 
+            fetchData();
+        }, []);
   // from database
   const sampleclasses = [
     { name : 'Advanced Chemistry',

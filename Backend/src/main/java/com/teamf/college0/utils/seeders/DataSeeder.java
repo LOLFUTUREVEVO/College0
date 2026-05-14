@@ -44,6 +44,11 @@ public class DataSeeder implements CommandLineRunner {
         } catch (Exception e) {
             System.out.println("NOT REPEATING STUDENTS: " + e.getMessage());
         }
+        try{
+            seedEnrolledStudent("teststudent1", "Kylie","Jackson");
+        } catch (Exception e) {
+            System.out.println("NOT REPEATING ENROLLED STUDENTS" + e.getMessage());
+        }
 
         System.out.println("Completed Data Seeding!");
     }
@@ -82,5 +87,16 @@ public class DataSeeder implements CommandLineRunner {
         student.setMember(false);
         student.setStatus(UserAccount.Status.PENDING_APPLICATION);
         accountRepository.save(student);
+    }
+    private void seedEnrolledStudent(String userName, String firstName, String lastName) {
+        UserAccount eStudent = new UserAccount();
+        eStudent.setUserName(userName);
+        eStudent.setPassword(passwordEncoder.encode("test123")); // fixed: was plain text
+        eStudent.setRole(UserAccount.Role.STUDENT);
+        eStudent.setFirstName(firstName);
+        eStudent.setLastName(lastName);
+        eStudent.setMember(false);
+        eStudent.setStatus(UserAccount.Status.APPROVED);
+        accountRepository.save(eStudent);
     }
 }

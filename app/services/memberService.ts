@@ -1,38 +1,21 @@
 import axios from "axios";
-//import { ALL_MEMBERS, API_MEMBERS_ACCESS , MEMBERS_ENDPOINT, SKILLS_ENDPOINT, GET_PENDING_ENDPOINT, APPROVE_ENDPOINT, ASSUMPTION_OF_RISK_ENDPOINT } from "@/.env/VARIABLES"
+
 
 const API_URL = "http://localhost:8080/";
-//const ALL_MEMBERS_API = API_MEMBERS_ACCESS + MEMBERS_ENDPOINT + ALL_MEMBERS;
-//const API_URL_SKILLS = API_MEMBERS_ACCESS + SKILLS_ENDPOINT;
 
-export type SkillType = "SHOPBOT" | "PROGRAMMING" | "CAD" | "PRINT3D" | "LASER_CUTTER" | "DRILL_PRESS" | "ILLUSTRATOR"
-export type SkillLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "SUPER_USER";
 export type Status = "PENDING" | "APPROVED" | "REJECTED" | "DISABLED";
 
 
 export interface MemberData {
-  center_id?: number | null;
-  grade?: number | null;
-  // Remove old team number fields - replaced with team objects
-  teams?: Team[];
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  hsGpa: Number;
   role: string;
-  phone_number?: string;
-  address?: string;
-  email: string;
+  major?: string;
+  status?: string;
   dob?: string;
-  race?: string;
-  gender?: string;
-  membership_type: string;
-  school_id?: number | null;
-  other_school_name?: string;
-  is_alumni?: boolean;
-  opt_in_emails?: boolean;
-  has_signed_waiver?: boolean;
-  photo_url?: string;
-  membership_valid_until?: string;
-  creation_date?: string;
+  userId: Number;
 }
 
 // Add Team interface for member data
@@ -43,11 +26,6 @@ export interface Team {
   program: 'FRC' | 'FTC' | 'FLL';
   inNyc: boolean;
   location?: any;
-}
-
-export interface SkillData {
-    skillType: SkillType;
-    skillLevel: SkillLevel;
 }
 
 export interface ApprovalRequest {
@@ -61,23 +39,9 @@ export const createMember = async (memberData: MemberData) => {
     try {
         // Transform the data to match backend expectations
         const transformedData = {
-            center_id: memberData.center_id || null,
-            grade: memberData.grade || null,
-            first_name: memberData.first_name,
-            last_name: memberData.last_name,
+            first_name: memberData.firstName,
+            last_name: memberData.lastName,
             role: memberData.role,
-            phone_number: memberData.phone_number || null,
-            address: memberData.address || null,
-            email: memberData.email,
-            race: memberData.race || null,
-            gender: memberData.gender || null,
-            membershipType: memberData.membership_type,
-            school: memberData.school_id || null,
-            otherSchoolName: memberData.other_school_name || null,
-            isAlumni: memberData.is_alumni || false,
-            recieveEmails: memberData.opt_in_emails || false,
-            isWaiverSigned: memberData.has_signed_waiver || false,
-            photoUrl: memberData.photo_url || null,
             dob: memberData.dob || null,
         };
 
@@ -185,9 +149,9 @@ export const deleteMember = async (id: number) => {
 
 
 
-export const getPending = async () => {
+export const getPendingStudents = async () => {
     try {
-        const res = await axios.get(`${API_URL+ "registrar/accounts/pending/all"}`);
+        const res = await axios.get(`${API_URL+ "registrar/accounts/pending/students"}`);
         return res.data;
     } catch (error) {
         console.error("Error recieving the members that we need: ", error);

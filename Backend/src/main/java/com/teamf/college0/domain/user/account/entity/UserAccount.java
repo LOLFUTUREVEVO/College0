@@ -37,11 +37,10 @@ public class UserAccount {
     @Column(name = "username", unique = true, nullable = false)
     private String userName;
 
-    @JsonIgnore
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @JsonIgnore
+
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
@@ -62,6 +61,11 @@ public class UserAccount {
 
     @Column(name="hs_gpa")
     private double hsGpa;
+
+    @Column(name="major")
+    private String major;
+
+
 
 
 }

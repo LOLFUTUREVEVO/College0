@@ -2,6 +2,8 @@ package com.teamf.college0.domain.course.controller;
 
 import com.teamf.college0.domain.course.entity.Course;
 import com.teamf.college0.domain.course.service.CourseService;
+import com.teamf.college0.domain.user.account.UserAccountRepository;
+import com.teamf.college0.domain.user.account.entity.UserAccount;
 import com.teamf.college0.domain.user.account.entity.UserAccount.Role;
 import com.teamf.college0.utils.jwt.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,10 +23,12 @@ public class CourseController {
 
     private final JwtUtil jwtUtil;
     private final CourseService courseService;
+    private final UserAccountRepository userAccountRepository;
 
-    public CourseController(JwtUtil jwtUtil, CourseService courseService) {
+    public CourseController(JwtUtil jwtUtil, CourseService courseService, UserAccountRepository userAccountRepository) {
         this.jwtUtil = jwtUtil;
         this.courseService = courseService;
+        this.userAccountRepository = userAccountRepository;
     }
 
     @PostMapping
@@ -33,6 +37,17 @@ public class CourseController {
             if (!isRegistrar(request)) {
                 logger.warn("Unauthorized course creation attempt");
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied: Registrars only.");
+            }
+
+            // Resolve instructor by ID so JPA doesn't treat it as a new transient object
+            if (newCourse.getInstructor() != null && newCourse.getInstructor().getUserId() != null) {
+                UserAccount instructor = userAccountRepository
+                        .findById(newCourse.getInstructor().getUserId())
+                        .orElseThrow(() -> new RuntimeException(
+                                "Instructor not found with ID: " + newCourse.getInstructor().getUserId()));
+                newCourse.setInstructor(instructor);
+            } else {
+                newCourse.setInstructor(null);
             }
 
             Course created = courseService.saveCourse(newCourse);
@@ -79,10 +94,12 @@ public class CourseController {
     // --- Helper ---
 
     private boolean isRegistrar(HttpServletRequest request) {
-        String token = jwtUtil.extractAndValidateToken(request);
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return false;
+        }
+        String token = authHeader.substring(7);
         Role role = jwtUtil.extractRole(token);
         return Role.REGISTRAR.equals(role);
     }
-
-    
 }

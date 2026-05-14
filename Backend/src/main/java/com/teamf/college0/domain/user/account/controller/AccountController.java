@@ -1,6 +1,7 @@
 package com.teamf.college0.domain.user.account.controller;
 
 
+import com.teamf.college0.domain.user.account.entity.UserAccount;
 import com.teamf.college0.domain.user.account.entity.UserAccount.Role;
 import com.teamf.college0.domain.user.account.service.AccountApprovalService;
 import com.teamf.college0.utils.dtos.WebDTOs;
@@ -13,10 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -46,6 +46,28 @@ public class AccountController {
             return ResponseEntity.ok(result);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body("Invalid Token: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/pending/all")
+    public ResponseEntity<?> getPendingAccounts(HttpServletRequest request) {
+        List<UserAccount> pendingAccounts = accountApprovalService.getPendingAccounts();
+
+
+
+        try {
+            String token = jwtUtil.extractAndValidateToken(request);
+
+            Role role = jwtUtil.extractRole(token);
+            boolean isAdmin = Role.REGISTRAR.equals(role);
+
+            if (isAdmin) {
+                return ResponseEntity.ok(pendingAccounts);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid token error: " + e.getMessage());
         }
     }
 

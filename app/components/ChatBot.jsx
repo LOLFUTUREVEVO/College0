@@ -15,7 +15,7 @@ export default function ChatBot() {
     setInput('');
     setLoading(true);
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, {
+    const res = await fetch(`http://localhost:8080/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: updated }),

@@ -59,4 +59,9 @@ public class UserAccount {
     @Enumerated(EnumType.STRING)
     @Column(name = "account_status", nullable = false)
     private Status status;
+
+    @Column(name="hs_gpa")
+    private double hsGpa;
+
+
 }

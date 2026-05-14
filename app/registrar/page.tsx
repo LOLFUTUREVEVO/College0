@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { logoutUser } from '../services/authService';
 import { useRouter } from 'next/navigation';
+import { getUserRole , isAuthenticated, isAccountValid } from '@/app/services/authService';
 
 export default function Registrar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,8 +11,42 @@ export default function Registrar() {
   const currentPeriod = localStorage.getItem('lastPeriod') || "No Active Period";
 
     useEffect(()=> {
-        
-    });
+        console.log("AdminLayout: Checking authorization...");
+
+        // Simplified check without delays
+        const checkAuth = () => {
+        // Check if user is authenticated
+        if (!isAuthenticated()) {
+            console.log("AdminLayout: User not authenticated, redirecting to login");
+            router.replace("/login");
+            return;
+        }
+
+        // Check if account is valid (active and approved)
+        if (!isAccountValid()) {
+            console.log("AdminLayout: User not authenticated, redirecting to login");
+            router.replace("/visitors");
+            return; 
+        }
+
+        // Check if user has admin role
+        const role = getUserRole();
+        console.log("AdminLayout: User role:", role);
+
+        if (role !== "REGISTRAR") {
+            console.log(
+            "NOT A REGISTRAR, GOING BACK!"
+            );
+            router.replace("/visitors");
+            return;
+        }
+
+        console.log("AdminLayout: User authorized as admin");
+        };
+
+        // Run immediately
+        checkAuth();
+    }, [router]);
 
   const handleLogout = () => {
     logoutUser();

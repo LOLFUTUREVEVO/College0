@@ -324,3 +324,41 @@ const getUserAccountFromToken = (token: string): UserAccount | null => {
     return null;
   }
 };
+
+export const getUserAccount = (): UserAccount | null => {
+  if (typeof window === 'undefined') return null;
+  
+  const token = getToken();
+  if (!token) return null;
+
+  return getUserAccountFromToken(token);
+};
+
+export const isAccountValid = (): boolean => {
+  const account = getUserAccount();
+  if (!account) return false;
+  
+  return account.isActive && account.status === 'APPROVED';
+};
+
+export const isAuthenticated = (): boolean => {
+  return getToken() !== null;
+};
+
+
+
+export const getUserRole = (): string | null => {
+  const token = getToken();
+  if (!token) return null;
+  try {
+    const payload = token.split('.')[1];
+    const decodedPayload = JSON.parse(atob(payload));
+    console.log('Getting role from JWT:', decodedPayload);
+    const role = decodedPayload.role;
+    console.log('Extracted role:', role);
+    return role;
+  } catch (error) {
+    console.error('Error decoding JWT for role:', error);
+    return null;
+  }
+};

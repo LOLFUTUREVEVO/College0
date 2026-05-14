@@ -52,7 +52,7 @@ public class StudentCourseController {
             logger.error("Error fetching courses: {}", e.getMessage());
             return ResponseEntity.badRequest().body("Token error: " + e.getMessage());
         }
-    }
+    }   
 
 
     private boolean isStudentOrRegistrar(HttpServletRequest request) {

@@ -81,7 +81,7 @@ export default function Login() {
               
               <h1 className="text-lg text-white">Password</h1>
               
-              <input className="bg-white rounded-md p-5 py-3 text-black" type="text" id="password" name="password" value={creds.password} onChange={handleInputChange}></input>
+              <input className="bg-white rounded-md p-5 py-3 text-black" type="password" id="password" name="password" value={creds.password} onChange={handleInputChange}></input>
             <form onSubmit={handleSubmit}>
               <button type="submit" className="bg-green-500 text-white text-lg rounded-md p-5 py-3 hover:bg-green-600 transition-colors duration-150" disabled={isLoading}>{isLoading ? "Logging In..." : "Login"}</button>
             </form>

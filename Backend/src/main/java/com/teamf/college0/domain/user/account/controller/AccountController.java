@@ -49,11 +49,12 @@ public class AccountController {
         }
     }
 
-    @GetMapping("/pending/all")
-    public ResponseEntity<?> getPendingAccounts(HttpServletRequest request) {
-        List<UserAccount> pendingAccounts = accountApprovalService.getPendingAccounts();
-
-
+    @GetMapping("/pending/students")
+    public ResponseEntity<?> getPendingStudentAccounts(HttpServletRequest request) {
+        List<UserAccount> pendingAccounts = accountApprovalService.getPendingAccounts()
+                .stream()
+                .filter(account -> account.getRole() == Role.STUDENT)
+                .toList();
 
         try {
             String token = jwtUtil.extractAndValidateToken(request);
@@ -70,6 +71,31 @@ public class AccountController {
             return ResponseEntity.badRequest().body("Invalid token error: " + e.getMessage());
         }
     }
+
+    @GetMapping("/pending/instructors")
+    public ResponseEntity<?> getPendingInstructorAccounts(HttpServletRequest request) {
+        List<UserAccount> pendingAccounts = accountApprovalService.getPendingAccounts()
+                .stream()
+                .filter(account -> account.getRole() == Role.INSTRUCTOR)
+                .toList();
+
+        try {
+            String token = jwtUtil.extractAndValidateToken(request);
+
+            Role role = jwtUtil.extractRole(token);
+            boolean isAdmin = Role.REGISTRAR.equals(role);
+
+            if (isAdmin) {
+                return ResponseEntity.ok(pendingAccounts);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid token error: " + e.getMessage());
+        }
+    }
+
+
 
 
 }

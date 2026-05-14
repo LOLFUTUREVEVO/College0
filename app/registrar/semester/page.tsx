@@ -312,7 +312,7 @@ export default function SemesterManagement() {
         <h2 className="text-2xl font-bold mb-8 px-2 text-blue-400">College One</h2>
 
         <nav className="flex flex-col space-y-2">
-          <Link href="/visitors" className="p-3 rounded-md transition-colors">Main Page</Link>
+          <Link href="/registrar" className="p-3 rounded-md transition-colors">Dashboard</Link>
           <Link href="/registrar" className="p-3 rounded-md transition-colors">Applications</Link>
           <Link href="/registrar/semester" className="p-3 rounded-md bg-slate-700 transition-colors">Semester Management</Link>
           <Link href="/student/help" className="p-3 rounded-md transition-colors">Help Page</Link>

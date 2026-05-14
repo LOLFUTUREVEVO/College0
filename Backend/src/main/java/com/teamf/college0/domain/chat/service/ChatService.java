@@ -33,7 +33,7 @@ public class ChatService {
         String systemPrompt = hasContext
             ? "You are a helpful assistant. Use the context below to answer.\n\nContext:\n"
               + String.join("\n\n", results)
-            : "You are a helpful assistant. Answer the user's question as best you can.";
+            : "You are a helpful assistant. Answer the user's question as best you can. Make sure to give a halucination warning";
             
 
         Client gemini = Client.builder()

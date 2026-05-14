@@ -80,6 +80,7 @@ public class SecurityConfigs {
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/auth/me").authenticated()
+                        .requestMatchers("/application/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

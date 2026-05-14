@@ -28,3 +28,19 @@ CREATE TABLE IF NOT EXISTS enrollment (
     FOREIGN KEY (course_id) REFERENCES course(course_id),
     FOREIGN KEY (student_id) REFERENCES user_account(user_id)
 );
+
+CREATE TABLE IF NOT EXISTS applications (
+    application_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    application_type TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'PENDING',
+    institution TEXT,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    address TEXT,
+    major TEXT,
+    gpa REAL,
+    degree_level TEXT,
+    expertise_topic TEXT
+);

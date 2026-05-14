@@ -18,10 +18,10 @@ interface InstructorApplication {
 
 const sampleStudentApps: StudentApplication[] = [
   { name: "Karol Kopciuch", gpa: 3.5, target_major: "Computer Science" },
-  { name: "Marcus Coppa", gpa: 3.5, target_major: "Computer Science" },
+  { name: "Marcus Coppa", gpa: 3.6, target_major: "Computer Science" },
   { name: "Bogdan Hermanowski", gpa: 3.5, target_major: "Mechanical Engineering" },
-  { name: "Bogdan Hermanowski4", gpa: 3.5, target_major: "Mechanical Engineering" },
-  { name: "Bogdan Hermanowski2", gpa: 3.5, target_major: "Mechanical Engineering" },
+  { name: "Bogdan Hermanowski4", gpa: 3.9, target_major: "Mechanical Engineering" },
+  { name: "Bogdan Hermanowski2", gpa: 4.0, target_major: "Mechanical Engineering" },
   { name: "Bogdan Hermanowski3", gpa: 3.5, target_major: "Mechanical Engineering" },
 ];
 

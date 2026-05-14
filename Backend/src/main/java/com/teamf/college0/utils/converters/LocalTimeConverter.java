@@ -1,4 +1,4 @@
-package com.teamf.college0.utils;
+package com.teamf.college0.utils.converters;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

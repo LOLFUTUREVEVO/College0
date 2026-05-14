@@ -1,6 +1,9 @@
-import Link from "next/link";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 export default function StudentSignup() {
+  const router = useRouter();
   return (
     <div className="flex flex-col flex-1 items-center justify-center  font-sans bg-slate-900 gap-10">
         <p className="text-white text-7xl font-bold">College One Application Portal</p>
@@ -49,7 +52,13 @@ export default function StudentSignup() {
             <input className="bg-white rounded-md py-2 text-black mb-10"></input>
 
 
-            <button className="bg-green-500 text-white text-lg rounded-md p-5 py-3 hover:bg-green-600 transition-colors duration-150">Apply</button>
+            <button
+              type="button"
+              onClick={() => router.push("/visitor")}
+              className="bg-green-500 text-white text-lg rounded-md p-5 py-3 hover:bg-green-600 transition-colors duration-150"
+            >
+              Apply
+            </button>
         </div>
     </div>
   );
